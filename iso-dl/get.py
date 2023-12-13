@@ -25,8 +25,8 @@ def download(url: str, fileName: str, dir:str):
             size += len(buffer)
             if length:
                 percent = int((size / length) * 100)
-                print(Fore.RESET+"Downloading "+Fore.BLUE+f"{fileName}"+': '+Fore.CYAN+f"{percent}%", end='\r')
-    print(Fore.GREEN+"\n\nDone Downloading: "+Fore.CYAN+f"{fileName}"+Fore.RESET+'\n')
+                print(Fore.RESET+"Downloading "+Fore.BLUE+f"{fileName} to "+Fore.LIGHTWHITE_EX+f"{dir}"+': '+Fore.CYAN+f"{percent}%", end='\r')
+    print(Fore.GREEN+"\n\nDone Downloading: "+Fore.CYAN+f"{dir}/{fileName}"+Fore.RESET+'\n')
 
 def start():
     i = input("┌──────────────────────────────────────────────────────────────────────────────────┐\n│　　　　　　　　　　　　　　　　　　 Welcome 　　　　　　　　　　　　　　　　　　 │\n│　　　This is a tool to download Ventoy and/or isos of popular linux distros 　　 │\n│　　　(if you are on linux you can also use it to create a bootable volume)　　　 │\n│　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　  │\n│　　　　　　　　　　　　　　　 [1]- Download Ventoy　　　　　　　　　　　　　　　 │\n│　　　　　　　　　　　　　　　　[2]- Download ISOS 　　　　　　　　　　　　　　　 │\n│[3]- Create bootable volume from ISO (requires sudo, can be run on mac and linux) │\n│　　　　　　　　　　　　　　　　　　[4]- Exit　　　　　　　　　　　　　　　　　　 │\n└──────────────────────────────────────────────────────────────────────────────────┘\n\n: ")
@@ -150,13 +150,13 @@ def mintdl():
     print("What flavor of Linux Mint would you like to download")
     l = input("[1]- Cinnamon\n[2]- Mate\n[3]- XFCE\n[4]- Back\n\nWhich one(if none is selected Standard will be downloaded):\n")
     if l == "":
-        download(mint[0],"output/linux-mint-cinnamon.iso")
+        download(mint[0],"linux-mint-cinnamon.iso","output")
     elif l == "1":
-        download(mint[0],"output/linux-mint-cinnamon.iso")
+        download(mint[0],"linux-mint-cinnamon.iso","output")
     elif l == "2":
-        download(mint[1],"output/linux-mint-mate.iso")
+        download(mint[1],"linux-mint-mate.iso","output")
     elif l == "3":
-        download(mint[2],"output/linux-mint-xfce.iso")
+        download(mint[2],"linux-mint-xfce.iso","output")
     elif l == "4":
         back()
     if int(i) >= 4:
@@ -169,7 +169,7 @@ def otherdl():
         print("Please provide the EXACT link to the ISO file you would like to download")
         o = input("url:\n")
         if validators.url(0) == True:
-            download(o,"output/other.iso")
+            download(o,"other.iso","output")
         else:
             print("The url you entered was not valid")
     else:
