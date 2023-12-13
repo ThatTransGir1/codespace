@@ -4,6 +4,8 @@ import platform
 import os
 import validators
 import sys
+import gzip
+import time
 
 def download(url: str, fileName: str, dir:str):
     response = requests.get(url, stream=True)
@@ -42,6 +44,18 @@ def start():
         print("The number you entered is not a valid input, please enter a number between [1-4]")
 
 
+def cdisk():
+    if platform.system() == "Windows":
+        print("Sorry but this cannot be run on windows, I reccomend you use RUFUS link: https://rufus.ie")
+    print("WARNING\n\nThis is going to need to use SUDO and DD (disk destroyer) to flash the ISO onto the usb to make it bootable")
+    os.system("lsblk --noheadings --nodeps --paths --raw --output NAME,RM,TRAN,TYPE | grep ' 1 usb disk$' | cut --delimiter ' ' --fields 1")
+    print("above is a list of usb drives plugged into your system, copy (select the text and use ctrl/cmd+shift+c to copy the text)\nThe exact string (e.g /dev/sda) for use later in the procces")
+    i = input("please paste the copied drive string here: ")
+    a = input("please specify the path to the ISO file: ")
+    cmd = "dd if="+a+" of="+i+" status=progress"
+    x=input("Are you sure you want to write "+a+" to "+i+" the data currently on your usb drive will be completely erased [y/n]: ")
+    
+
 def vtoy():
     urls = ["https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-12.4.0-amd64-xfce.iso", "", "", ""]
     ventoy = ["https://github.com/ventoy/Ventoy/releases/download/v1.0.96/ventoy-1.0.96-linux.tar.gz", "https://github.com/ventoy/Ventoy/releases/download/v1.0.96/ventoy-1.0.96-windows.zip", "https://github.com/ventoy/Ventoy/releases/download/v1.0.96/ventoy-1.0.96-livecd.iso"]
@@ -53,7 +67,18 @@ def vtoy():
         if platform.system() == "Windows":
             download(ventoy[1],"ventoy-windows.zip","ventoy")
         if platform.system() == "Linux":
-            download(ventoy[0],"ventoy-linux.tar.gz", "ventoy")
+            download(ventoy[1],"ventoy-livecd.iso", "ventoy")
+            print("Please insert the usb drive that you want Ventoy installed on. \nA usb drive of 16GB or more is reccomended as ISO files are large.")
+            time.sleep(20.5); print("please wait while we find the usb drive")
+            os.system("lsblk --noheadings --nodeps --paths --raw --output NAME,RM,TRAN,TYPE | grep ' 1 usb disk$' | cut --delimiter ' ' --fields 1")
+            i = input("type the path of the usb drive that you want Ventoy installed on EXACTLY as it shows above: ")
+            print("WARNING: this part of the program requires the use of sudo, procede at your own risk.")
+            x = input("WARNING: this part of the program requires the use of dd (diskdestroyer) this will reformat the entire usb deive\n\nWould you like to continue [y/n]: ")
+            if x.lower() == "y":
+                c = input("Please confirm that you want to erase " + i + "and install ventoy")
+                if c.lower() == "y":
+                    os.system("sudo dd if=/ventoy/ventoy-livecd.iso of="+i+"status=progress")
+                    print("Done, to complete the setup of ventoy please load the drive from your bios and follow the instructions provided.")
         if platform.system() == "Darwin":
             download(ventoy[2],"ventoy-livecd.iso","ventoy")
             print("You will need to use a program to flash this to a USB/DVD/SD Card. Balena Etcher is recommended.")
